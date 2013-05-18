@@ -1,0 +1,12 @@
+.modal_titulo{
+	display:block;
+	font-size: 3em;
+}
+.modal_imagen{
+	display:block;
+}
+.modal_copete{
+	max-width: 960px;
+	display:block;	
+	font-size: 1.5em;
+}

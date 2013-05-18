@@ -1,0 +1,241 @@
+body {
+  background: #cde9e8;
+  color: #333;
+  font-size: 11px;
+  height: auto;
+  /*padding-bottom: 20px;*/
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-family: Georgia, serif;
+  font-weight: normal;
+  padding-top: 20px;
+  text-align: center;
+}
+
+h2 {
+  padding-top: 20px;
+  text-align: center;
+}
+
+p, ul {
+  /*border: 1px solid #666;*/
+  overflow: hidden;
+  /*padding: 10px 0;
+  padding: 0;
+  text-align: center;*/
+}
+
+.container {
+  background-color: #FFF;
+  background-repeat: repeat-y;
+  /*margin-bottom: 20px;*/
+}
+
+.container {
+  /*background-image: url('../../images/996/demo-files/12_col.png');*/
+}
+
+.hide{display:none}
+
+
+#wrapper-mobile-main-menu{display:none}
+.solomobile{display:none}
+@media only screen and (min-width: 768px) and (max-width: 995px) {
+	.container {
+		background-color: #FFF;
+	}
+	#wrapper-mobile-main-menu{display:block}
+	#wrapper-main-menu{display:none}
+	#portamento_container{display:none}
+	.rslides_container{display:none}
+	.solomobile{display:block}	
+}
+
+@media only screen and (max-width: 767px) {
+	.container {
+		background-color: #FFF;
+	}
+	#wrapper-mobile-main-menu{display:block}
+	#wrapper-main-menu{display:none}
+	#portamento_container{display:none}
+	.rslides_container{display:none}
+	.solomobile{display:block}
+}
+
+@media only screen and (max-width: 479px) {
+	.container {
+		background-color: #FFF;
+	}
+	#wrapper-mobile-main-menu{display:block}
+	#wrapper-main-menu{display:none}
+	#portamento_container{display:none}
+	.rslides_container{display:none}
+	.solomobile{display:block}
+}
+
+#main-menu {
+	margin: 10px
+}
+#main-menu li {
+  display: inline;
+  list-style: none outside none;
+  font-family: Helvetica;
+  font-size: 1.5em;
+  margin-right: 1.5em;
+}
+#main-menu a {
+	color: #333;
+}
+#main-menu a:hover {
+	color: #000;
+	text-decoration: none;
+}
+#wrapper-main-menu{
+	background-color: #DDD;
+	margin-bottom: 4px !important;	
+}
+#wrapper-logo-mm {
+  margin: 4px 0 0;
+  width: 238px;
+}
+#portamento_container {
+	float:right; 
+	position:relative;
+	width: 996px !important;
+	margin-bottom: 4px !important;
+	z-index: 50;
+	height: 63px;
+}
+#portamento_container #wrapper-main-menu {
+	float:none; 
+	position:absolute;
+}
+#portamento_container #wrapper-main-menu.fixed {
+	position:fixed;
+}
+
+div.overlay_wrapper{  
+    float:left; /* important */  
+    position:relative; /* important(so we can absolutely position the description div */  
+}  
+div.description{  
+    position:absolute; /* absolute position (so we can position it where we want)*/  
+    bottom:0px; /* position will be on bottom */  
+    left:0px;  
+    width:100%;  
+    /* styling bellow */  
+    background-color:black;  
+    font-family: 'tahoma';  
+    font-size:15px;  
+    color:white;  
+    opacity:0.8; /* transparency */  
+    filter:alpha(opacity=80); /* IE transparency */  
+}  
+p.description_content{  
+    padding:10px;  
+    margin:0px;  
+}
+p.titulo{
+	font-weight: bold;
+	font-size: 0.9em;
+}
+p.titulo_slide{
+	/*font-weight: bold;*/
+	font-size: 1.5em;
+}
+.overlay_wrapper, ul#slider1 li{
+	cursor: pointer;
+}
+p.titulo_entrada{
+	font-size: 3em;	
+}
+p.copete_entrada{
+	font-size: 1.5em;
+	margin: 0.5em 0;
+}
+div.cuerpo_entrada{
+	float:left;
+	width: 100%;
+}
+div.cuerpo_entrada p{
+	font-size: 1.1em;
+	margin: 0.5em 0;
+}
+
+/*
+.nivel2{
+	display: none;
+}*/
+
+	/* Adjusting the margins, paddings and no list styles */
+	.navigation  {
+		margin:0; 
+		padding:0; 
+		list-style:none;
+	}	
+	
+	/* Little tricking with positions */
+	.navigation  li {
+		float:left;			/* Show list items inline */
+		width:100px; 
+		position:relative; 
+	}
+		
+	/* Playing with Main Categories */
+	.navigation  li a {
+		/*background:#262626;*/
+		color:#333;
+		display:block;  	/* Making sure a element covers whole li area */
+		padding:8px 7px 8px 7px; 
+		text-decoration:none; /* No underline */
+		text-align:center; 
+		text-transform:uppercase;
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+
+	.navigation  li a:hover {
+		color:#000;
+	}
+		
+	/* Sub Cat Menu stuff*/
+	.navigation  ul {
+		position:absolute; 
+		left:0; 
+		display:none; /* Hide it by default */
+		margin:0 0 0 -1px; 
+		padding:0; 
+		list-style:none;
+		border-top:3px solid #333;
+	}
+		
+	.navigation  ul li {
+		width:100px; 
+		float:left; 
+		border-top:none;
+	}
+		
+	/* Sub Cat menu link properties */
+	.navigation  ul a {
+		display:block;    	/* Making sure a element covers whole li area */
+		height:15px;
+		padding:8px 7px 13px 7px; 
+		color:#333;
+		text-decoration:none;	
+		border-top:none;
+		font-size: 1em;
+	}
+		
+	.navigation  ul a:hover {
+		color:#000;
+	}

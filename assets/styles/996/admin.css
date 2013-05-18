@@ -1,0 +1,72 @@
+body {
+	font-size: 12px;
+}
+ul#medidas_featured_content {
+	padding: 0;
+	margin-left: 20px;
+}
+ul#medidas_featured_content li {
+	display: inline;
+	margin-right: 14px;
+}
+a {
+	color:#000000;
+}
+p {
+	margin: 10px;
+	font-size: 12px;
+}
+label {
+	margin-left: 10px;
+}
+h2 {
+	padding-top: 0;
+}
+ul {
+	padding-left: 2em;
+}
+li {
+	list-style: none;
+}
+.imagen_mupload{
+	width: 100%;
+}
+.npt_mupload{
+	width: 100%;	
+}
+.tabla-admin{
+	margin:10px;
+}
+.tabla-admin td {
+	padding: 4px
+}
+.tabla-admin th {
+	background-color: #EEEEEE;
+	color: #333333;
+}
+
+#myoverlay {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:rgba(0, 0, 0, 0.85);
+    /*background: url(data:;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAATSURBVBhXY2RgYNgHxGAAYuwDAA78AjwwRoQYAAAAAElFTkSuQmCC) repeat scroll transparent\9;*/
+    z-index:9999;
+    color:white;
+}
+#txtmyoverlay{
+	margin-top: 10%;
+	margin-left: auto; 
+	margin-right: auto;	
+	width: 56px;
+	height: 21px;
+}
+.trDnD{
+	background-color: #FFFF00 !important;
+	filter: alpha(opacity=50);
+	-moz-opacity:0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;	
+}
