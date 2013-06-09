@@ -8,4 +8,7 @@ if(empty($ses_user))   {
 	echo '<a href="'.site_url('fbci/logout/').'">Logout</a>';	
 }
 ?>
+<pre>
+<? print_r($ses_user); ?>
+</pre>
 <div id="fb-root"></div>

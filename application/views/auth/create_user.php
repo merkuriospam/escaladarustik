@@ -24,12 +24,12 @@
             Email: <br />
             <?php echo form_input($email);?>
       </p>
-
+<?php /*
       <p>
             Phone: <br />
             <?php echo form_input($phone1);?>-<?php echo form_input($phone2);?>-<?php echo form_input($phone3);?>
       </p>
-
+*/ ?>
       <p>
             Password: <br />
             <?php echo form_input($password);?>

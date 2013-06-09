@@ -64,7 +64,14 @@ class Auth extends CI_Controller {
 				//redirect them back to the home page
 				$this->session->set_flashdata('message', $this->ion_auth->messages());
 				//redirect('/', 'refresh');
-				redirect('/admin/entradas/', 'refresh');
+				if($this->ion_auth->is_admin()) {
+					redirect('/admin/entradas/', 'refresh');
+				} elseif ($this->ion_auth->in_group('members')){
+					redirect('/miembros/activo/', 'refresh');
+				} else {
+					$this->session->set_flashdata('message', 'No Sos Admin, ni miembro. Raro...');
+					redirect('auth/login', 'refresh');					
+				}
 			}
 			else
 			{
@@ -394,9 +401,9 @@ class Auth extends CI_Controller {
 		$this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
 		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
-		$this->form_validation->set_rules('phone1', 'First Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
-		$this->form_validation->set_rules('phone2', 'Second Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
-		$this->form_validation->set_rules('phone3', 'Third Part of Phone', 'required|xss_clean|min_length[4]|max_length[4]');
+		//$this->form_validation->set_rules('phone1', 'First Part of Phone', 'required|xss_clean|min_length[1]|max_length[2]');
+		//$this->form_validation->set_rules('phone2', 'Second Part of Phone', 'required|xss_clean|min_length[1]|max_length[4]');
+		//$this->form_validation->set_rules('phone3', 'Third Part of Phone', 'required|xss_clean|min_length[6]|max_length[8]');
 		$this->form_validation->set_rules('company', 'Company Name', 'required|xss_clean');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 		$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'required');
@@ -411,7 +418,7 @@ class Auth extends CI_Controller {
 				'first_name' => $this->input->post('first_name'),
 				'last_name'  => $this->input->post('last_name'),
 				'company'    => $this->input->post('company'),
-				'phone'      => $this->input->post('phone1') . '-' . $this->input->post('phone2') . '-' . $this->input->post('phone3'),
+				//'phone'      => $this->input->post('phone1') . '-' . $this->input->post('phone2') . '-' . $this->input->post('phone3'),
 			);
 		}
 		if ($this->form_validation->run() == true && $this->ion_auth->register($username, $password, $email, $additional_data))
@@ -451,7 +458,7 @@ class Auth extends CI_Controller {
 				'type'  => 'text',
 				'value' => $this->form_validation->set_value('company'),
 			);
-			$this->data['phone1'] = array(
+			/*$this->data['phone1'] = array(
 				'name'  => 'phone1',
 				'id'    => 'phone1',
 				'type'  => 'text',
@@ -468,7 +475,7 @@ class Auth extends CI_Controller {
 				'id'    => 'phone3',
 				'type'  => 'text',
 				'value' => $this->form_validation->set_value('phone3'),
-			);
+			);*/
 			$this->data['password'] = array(
 				'name'  => 'password',
 				'id'    => 'password',
@@ -509,9 +516,9 @@ class Auth extends CI_Controller {
 		//validate form input
 		$this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
-		$this->form_validation->set_rules('phone1', 'First Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
+		/*$this->form_validation->set_rules('phone1', 'First Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
 		$this->form_validation->set_rules('phone2', 'Second Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
-		$this->form_validation->set_rules('phone3', 'Third Part of Phone', 'required|xss_clean|min_length[4]|max_length[4]');
+		$this->form_validation->set_rules('phone3', 'Third Part of Phone', 'required|xss_clean|min_length[4]|max_length[4]');*/
 		$this->form_validation->set_rules('company', 'Company Name', 'required|xss_clean');
 		$this->form_validation->set_rules('groups', 'Groups', 'xss_clean');
 		
@@ -592,7 +599,7 @@ class Auth extends CI_Controller {
 			'type'  => 'text',
 			'value' => $this->form_validation->set_value('company', $user->company),
 		);
-		$this->data['phone1'] = array(
+		/*$this->data['phone1'] = array(
 			'name'  => 'phone1',
 			'id'    => 'phone1',
 			'type'  => 'text',
@@ -609,7 +616,7 @@ class Auth extends CI_Controller {
 			'id'    => 'phone3',
 			'type'  => 'text',
 			'value' => $this->form_validation->set_value('phone3', $user->phone[2]),
-		);
+		);*/
 		$this->data['password'] = array(
 			'name' => 'password',
 			'id'   => 'password',
