@@ -1,46 +1,37 @@
-<h1>Create User</h1>
-<p>Please enter the users information below.</p>
+<?php echo $this->load->view('main_menu');?>
+	<div class="clear"></div>
+	<div class="grid_6">
+<div class="stylizedMail stylized myform">	
+
+<h1>Registro</h1>
+<p>Por favor, ingrese la información solicitada.</p>
 
 <div id="infoMessage"><?php echo $message;?></div>
 
 <?php echo form_open("auth/create_user");?>
 
-      <p>
-            First Name: <br />
+      <div class="dv_regis">
+            Nombre: <br />
             <?php echo form_input($first_name);?>
-      </p>
-
-      <p>
-            Last Name: <br />
+      </div><div class="dv_regis">
+            Apellido: <br /> 
             <?php echo form_input($last_name);?>
-      </p>
-
-      <p>
-            Company Name: <br />
-            <?php echo form_input($company);?>
-      </p>
-
-      <p>
-            Email: <br />
+      </div><div class="dv_regis">
+            Email: <br /> 
             <?php echo form_input($email);?>
-      </p>
-<?php /*
-      <p>
-            Phone: <br />
-            <?php echo form_input($phone1);?>-<?php echo form_input($phone2);?>-<?php echo form_input($phone3);?>
-      </p>
-*/ ?>
-      <p>
-            Password: <br />
+      </div><div class="dv_regis">
+            Password: <br /> 
             <?php echo form_input($password);?>
-      </p>
-
-      <p>
-            Confirm Password: <br />
+      </div><div class="dv_regis">
+            Confirmar Password: <br />
             <?php echo form_input($password_confirm);?>
-      </p>
-
-
-      <p><?php echo form_submit('submit', 'Create User');?></p>
+      </div><div class="dv_regis">
+      	 <button type="submit">Registrarme</button>
+      	<?php //echo form_submit('submit', 'Registrarme');?>
+      </div>
 
 <?php echo form_close();?>
+</div>
+</div>
+
+	<div class="grid_6">&nbsp;</div>

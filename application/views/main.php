@@ -1,3 +1,5 @@
+	<div class="clear"></div>
+	<div class="grid_12">
 <?php 
 $ses_user=$this->session->userdata('User');
 if(empty($ses_user))   {
@@ -8,7 +10,7 @@ if(empty($ses_user))   {
 	echo '<a href="'.site_url('fbci/logout/').'">Logout</a>';	
 }
 ?>
-<pre>
-<? print_r($ses_user); ?>
-</pre>
-<div id="fb-root"></div>
+		<pre>
+		<? print_r($ses_user); ?>
+		</pre>
+	</div>

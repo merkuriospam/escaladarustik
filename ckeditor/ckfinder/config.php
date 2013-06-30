@@ -60,7 +60,17 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = '/ckfinder/userfiles/';
+//$baseUrl = '/ckfinder/userfiles/';
+switch ($_SERVER['HTTP_HOST']) {
+    case 'www.merkurio.com.ar':
+        $baseUrl = 'http://www.merkurio.com.ar/escaladarustik/ckfinder/userfiles/';
+        break;
+    case 'www.escaladarustik.com.ar':
+        $baseUrl = 'http://www.escaladarustik.com.ar/ckfinder/userfiles/';
+        break;
+    default:
+       $baseUrl = '/ckfinder/userfiles/';
+}
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the

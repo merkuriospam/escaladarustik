@@ -1,0 +1,2 @@
+ALTER TABLE `comunicaciones` ADD COLUMN `asunto` VARCHAR(250) NULL DEFAULT NULL  AFTER `segmento_id`;
+ALTER TABLE `comunicaciones_buffer` ADD COLUMN `asunto` VARCHAR(250) NULL DEFAULT NULL  AFTER `estado`;

@@ -9,6 +9,7 @@
 			<li><a href="<?php echo site_url('admin/backup/'); ?>">Backup</a></li>
 			<li><a href="<?php echo site_url('admin/sistema/'); ?>">Sistema</a></li>
 			<li><a href="<?php echo site_url('admin/dev/'); ?>">DEV</a></li>
+			<li><a href="<?php echo site_url('admin/comunicaciones/'); ?>">Comunicaciones</a></li>
 			<li><a href="<?php echo site_url('auth/logout/'); ?>">Salir</a></li>		
 		</ul>
 	</div>

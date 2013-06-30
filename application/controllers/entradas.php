@@ -15,16 +15,20 @@ class Entradas extends CI_Controller {
 		
 	public function ver($entrada_id = null)
 	{
+		$oLoggedUser = $this->session->all_userdata();
 		$data['oColor_fondo'] = $this->mod_sistema->fetchById(Mod_sistema::color_fondo);
 		$data['oColor_contenedor'] = $this->mod_sistema->fetchById(Mod_sistema::color_contenedor);	
 		$data['oColor_menu'] = $this->mod_sistema->fetchById(Mod_sistema::color_menu);		
 		$data['oLogoMenu'] = $this->mod_sistema->fetchById(Mod_sistema::logo_image_main_menu);		
 		$data['oMenu'] = $this->mod_menu->fetchjerarquico();
-		$data['htmlMenu'] = getArbol($data['oMenu']);
-		$data['htmlMenuMobile'] = getArbolMobile($data['oMenu']);		
+		$data['htmlMenu'] = getArbol($data['oMenu'],FALSE,$oLoggedUser);
+		$data['htmlMenuMobile'] = getArbolMobile($data['oMenu'],FALSE,$oLoggedUser);		
 		$data['isMobile'] 	= $this->mobiledetection->isMobile();
 		$data['oEntrada']	= $this->entrada->fetchById($entrada_id);
-		$data['oImagenes'] 	= $this->imagenes->fetch(array('entrada_id'=>$entrada_id,'ordenar'=>array('imagenes.orden','ASC')));		
+		$data['site_title'] = $data['oEntrada']->titulo;
+		if((($data['oEntrada']->categoria_id==Entrada::CONTENIDO_COMUNICACION) and (!isset($oLoggedUser['user_id'])))) redirect('home');
+		$data['oImagenes'] 	= $this->imagenes->fetch(array('entrada_id'=>$entrada_id,'ordenar'=>array('imagenes.orden','ASC')));	
+		$data['oLoggedUser'] = $oLoggedUser;	
 		/*$js_adicional = '';
 		if(!empty($data['oImagenes'])) {
 			$js_adicional .= '<script type="text/javascript">';

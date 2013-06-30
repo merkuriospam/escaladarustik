@@ -1,4 +1,7 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+//include the facebook.php from libraries directory
+require_once APPPATH.'libraries/facebook/facebook.php';
 
 class Auth extends CI_Controller {
 
@@ -7,6 +10,22 @@ class Auth extends CI_Controller {
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->database();
+	    $this->load->library('session');  //Load the Session 
+		$this->config->load('facebook'); //Load the facebook.php file which is located in config directory
+		$this->load->model('mod_sistema');
+		$this->load->model('mod_menu');
+		$this->load->library('mobiledetection');	
+		$this->load->helper('menu');	
+		
+		$this->data['oColor_fondo'] = $this->mod_sistema->fetchById(Mod_sistema::color_fondo);
+		$this->data['oColor_contenedor'] = $this->mod_sistema->fetchById(Mod_sistema::color_contenedor);	
+		$this->data['oColor_menu'] = $this->mod_sistema->fetchById(Mod_sistema::color_menu);	
+		$this->data['oLogoMenu'] = $this->mod_sistema->fetchById(Mod_sistema::logo_image_main_menu);	
+		$this->data['oMenu'] = $this->mod_menu->fetchjerarquico();
+		$this->data['htmlMenu'] = getArbol($this->data['oMenu'],FALSE,NULL);		
+		$this->data['htmlMenuMobile'] = getArbolMobile($this->data['oMenu'],FALSE,NULL);
+		$this->data['isMobile'] = $this->mobiledetection->isMobile();
+		$this->data['styles'] = array(array('stylesheet' => '996/secundaria'));				
 
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 	}
@@ -14,6 +33,7 @@ class Auth extends CI_Controller {
 	//redirect if needed, otherwise display the user list
 	function index()
 	{
+
 
 		if (!$this->ion_auth->logged_in())
 		{
@@ -46,7 +66,81 @@ class Auth extends CI_Controller {
 	//log the user in
 	function login()
 	{
+		
 		$this->data['title'] = "Login";
+		
+		$base_url=$this->config->item('base_url'); //Read the baseurl from the config.php file
+		//get the Facebook appId and app secret from facebook.php which located in config directory for the creating the object for Facebook class
+    	$facebook = new Facebook(array(
+		'appId'		=>  $this->config->item('appID'), 
+		'secret'	=> $this->config->item('appSecret'),
+		));
+		
+		$user = $facebook->getUser(); // Get the facebook user id 		
+		
+		if($user){
+			
+			try{
+				$user_profile = $facebook->api('/me');  //Get the facebook user profile data
+				
+				$params = array('next' => $base_url.'miembros/activo/comunicaciones/');
+				
+				$ses_user=array('User'=>$user_profile,
+				   'logout' =>$facebook->getLogoutUrl($params)   //generating the logout url for facebook 
+				);
+				if($this->ion_auth->email_check($user_profile['email'])) {
+					$this->session->set_userdata($ses_user);
+					//echo '<pre>'.print_r($ses_user).'</pre>';die();
+					if ($this->ion_auth->fb_login($user_profile['email'], FALSE)) {
+						redirect('/miembros/activo/comunicaciones/', 'refresh');
+					} else {
+						echo "fallo fblogin";
+						die();	
+					}
+				} else {
+					$this->session->set_userdata($ses_user);
+					
+					$usuario_nuevo = $user_profile;
+					//print_r($usuario_nuevo);die();
+					$username = strtolower($usuario_nuevo['username']);
+					$email    = $usuario_nuevo['email'];
+					
+					$alpha = "abcdefghijklmnopqrstuvwxyz";
+					$alpha_upper = strtoupper($alpha);
+					$numeric = "0123456789";
+					$special = ".-+=_,!@$#*%<>[]{}";
+					$chars = $alpha.$alpha_upper.$numeric;					
+					$length = strlen($chars);
+					$pw = '';
+					 
+					for ($i=0;$i<8;$i++) $pw .= substr($chars, rand(0, $length-1), 1);
+					$pw = str_shuffle($pw);
+					$password = $pw;
+		
+					$additional_data = array(
+						'first_name' => $usuario_nuevo['first_name'],
+						'last_name'  => $usuario_nuevo['last_name'],
+						'fb_data'    => serialize($usuario_nuevo),
+						'sexo'	 	 => ($usuario_nuevo['gender']=='male')?1:0,
+						'temp'		 => $pw,
+						'fecha_nacimiento' => $usuario_nuevo['birthday']
+					);					
+					
+					$this->ion_auth->register($username, $password, $email, $additional_data);	
+					if ($this->ion_auth->fb_login($email, FALSE)) {
+						redirect('/miembros/activo/comunicaciones/');
+					} else {
+						echo "fallo fblogin";
+						die();	
+					}					
+				}
+			}catch(FacebookApiException $e){
+				error_log($e);
+				$user = NULL;
+			}		
+		}
+
+
 
 		//validate form input
 		$this->form_validation->set_rules('identity', 'Identity', 'required');
@@ -67,7 +161,7 @@ class Auth extends CI_Controller {
 				if($this->ion_auth->is_admin()) {
 					redirect('/admin/entradas/', 'refresh');
 				} elseif ($this->ion_auth->in_group('members')){
-					redirect('/miembros/activo/', 'refresh');
+					redirect('/miembros/activo/comunicaciones/', 'refresh');
 				} else {
 					$this->session->set_flashdata('message', 'No Sos Admin, ni miembro. Raro...');
 					redirect('auth/login', 'refresh');					
@@ -97,21 +191,32 @@ class Auth extends CI_Controller {
 				'type' => 'password',
 			);
 
-			$this->load->view('auth/login', $this->data);
+			  $this->data['styles'] = array(array('stylesheet' => '996/secundaria'));
+			  $this->data['main_view'] = 'auth/login';	
+			  $this->load->view('layout_v2', $this->data);
+			//$this->load->view('auth/login', $this->data);
 		}
 	}
 
 	//log the user out
 	function logout()
 	{
-		$this->data['title'] = "Logout";
-
-		//log the user out
-		$logout = $this->ion_auth->logout();
-
+		//$this->data['title'] = "Logout";
+		//$logout = $this->ion_auth->logout();
 		//redirect them to the login page
-		$this->session->set_flashdata('message', $this->ion_auth->messages());
-		redirect('auth/login', 'refresh');
+		//$this->session->set_flashdata('message', $this->ion_auth->messages());
+		//$this->ion_auth->logout();		
+		//redirect('auth/login');
+		if (isset($_SERVER['HTTP_COOKIE'])) {
+		    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+		    foreach($cookies as $cookie) {
+		        $parts = explode('=', $cookie);
+		        $name = trim($parts[0]);
+		        setcookie($name, '', time()-1000);
+		        setcookie($name, '', time()-1000, '/');
+		    }
+		}
+		redirect('auth/login');
 	}
 
 	//change password
@@ -185,6 +290,7 @@ class Auth extends CI_Controller {
 	//forgot password
 	function forgot_password()
 	{
+		
 		$this->form_validation->set_rules('email', 'Email Address', 'required');
 		if ($this->form_validation->run() == false)
 		{
@@ -201,11 +307,13 @@ class Auth extends CI_Controller {
 				$this->data['identity_label'] = 'Email';	
 			}
 			
-			
-
 			//set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			$this->load->view('auth/forgot_password', $this->data);
+			//$this->load->view('auth/forgot_password', $this->data);
+			
+			  $this->data['styles'] = array(array('stylesheet' => '996/secundaria'));
+			  $this->data['main_view'] = 'auth/forgot_password';	
+			  $this->load->view('layout_v2', $this->data);			
 		}
 		else
 		{
@@ -277,7 +385,10 @@ class Auth extends CI_Controller {
 				$this->data['code'] = $code;
 
 				//render
-				$this->load->view('auth/reset_password', $this->data);
+			  $this->data['styles'] = array(array('stylesheet' => '996/secundaria'));
+			  $this->data['main_view'] = 'auth/reset_password';	
+			  $this->load->view('layout_v2', $this->data);				
+				//$this->load->view('auth/reset_password', $this->data);
 			}
 			else
 			{
@@ -389,13 +500,13 @@ class Auth extends CI_Controller {
 
 	//create a new user
 	function create_user()
-	{
+	{		
 		$this->data['title'] = "Create User";
 
-		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
+		/*if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
 			redirect('auth', 'refresh');
-		}
+		}*/
 
 		//validate form input
 		$this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
@@ -404,7 +515,7 @@ class Auth extends CI_Controller {
 		//$this->form_validation->set_rules('phone1', 'First Part of Phone', 'required|xss_clean|min_length[1]|max_length[2]');
 		//$this->form_validation->set_rules('phone2', 'Second Part of Phone', 'required|xss_clean|min_length[1]|max_length[4]');
 		//$this->form_validation->set_rules('phone3', 'Third Part of Phone', 'required|xss_clean|min_length[6]|max_length[8]');
-		$this->form_validation->set_rules('company', 'Company Name', 'required|xss_clean');
+		//$this->form_validation->set_rules('company', 'Company Name', 'required|xss_clean');
 		$this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
 		$this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'required');
 
@@ -417,7 +528,7 @@ class Auth extends CI_Controller {
 			$additional_data = array(
 				'first_name' => $this->input->post('first_name'),
 				'last_name'  => $this->input->post('last_name'),
-				'company'    => $this->input->post('company'),
+				//'company'    => $this->input->post('company'),
 				//'phone'      => $this->input->post('phone1') . '-' . $this->input->post('phone2') . '-' . $this->input->post('phone3'),
 			);
 		}
@@ -489,7 +600,9 @@ class Auth extends CI_Controller {
 				'value' => $this->form_validation->set_value('password_confirm'),
 			);
 
-			$this->load->view('auth/create_user', $this->data);
+			//$this->load->view('auth/create_user', $this->data);
+			$this->data['main_view'] 	= 'auth/create_user';
+			$this->load->view('layout_v2', $this->data);
 		}
 	}
 
@@ -519,7 +632,7 @@ class Auth extends CI_Controller {
 		/*$this->form_validation->set_rules('phone1', 'First Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
 		$this->form_validation->set_rules('phone2', 'Second Part of Phone', 'required|xss_clean|min_length[3]|max_length[3]');
 		$this->form_validation->set_rules('phone3', 'Third Part of Phone', 'required|xss_clean|min_length[4]|max_length[4]');*/
-		$this->form_validation->set_rules('company', 'Company Name', 'required|xss_clean');
+		//$this->form_validation->set_rules('company', 'Company Name', 'required|xss_clean');
 		$this->form_validation->set_rules('groups', 'Groups', 'xss_clean');
 		
 		if (isset($_POST) && !empty($_POST))
@@ -533,8 +646,8 @@ class Auth extends CI_Controller {
 			$data = array(
 				'first_name' => $this->input->post('first_name'),
 				'last_name'  => $this->input->post('last_name'),
-				'company'    => $this->input->post('company'),
-				'phone'      => $this->input->post('phone1') . '-' . $this->input->post('phone2') . '-' . $this->input->post('phone3'),
+				//'company'    => $this->input->post('company'),
+				//'phone'      => $this->input->post('phone1') . '-' . $this->input->post('phone2') . '-' . $this->input->post('phone3'),
 			);
 			
 			//Update the groups user belongs to
@@ -765,5 +878,4 @@ class Auth extends CI_Controller {
 			return FALSE;
 		}
 	}
-
 }

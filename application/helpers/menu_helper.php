@@ -1,8 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-function getArbol($oMenu = null, $conId = FALSE) {
+function getArbol($oMenu = NULL, $conId = FALSE, $oLoggedUser = NULL) {
 	$html = '';
-	if(($oMenu==null) or (empty($oMenu))) { return $html; }
+	if(($oMenu==NULL) or (empty($oMenu))) { return $html; }
 	$cadenaId = ($conId == TRUE)?' id="ul_main_menu"':'';
 	$html.= '<ul'.$cadenaId.' class="navigation">';
 	foreach($oMenu as $parent_id => $item) {
@@ -27,11 +27,20 @@ function getArbol($oMenu = null, $conId = FALSE) {
 				$html.= '</li>';
 		 	}
 		 }
-	} 
+	}
+	if(isset($oLoggedUser['email'])) {
+		$html.= '<li><a href="javascript: void(0)">'.$oLoggedUser['username'].'</a>';
+		$html.= '<ul style="position: inherit">';
+		$html.= '<li><a href="'.site_url('miembros/activo/comunicaciones').'">Comunicaciones</a></li>';
+		$html.= '<li><a href="'.site_url('auth/logout/').'">Cerrar Sesión</a></li>';
+		$html.= '</ul></li>';
+	} else {
+		$html.= '<li><a href="'.site_url('auth/login/').'">Ingresar</a>';
+	}
 	$html.= '</ul>';
 	return $html;	
 }
-function getArbolMobile($oMenu = null, $conId = FALSE) {
+function getArbolMobile($oMenu = null, $conId = FALSE, $oLoggedUser = FALSE) {
 	$html = '';
 	if(($oMenu==null) or (empty($oMenu))) { return $html; }
 	$cadenaId = ($conId == TRUE)?' id="sl_main_menu"':'';

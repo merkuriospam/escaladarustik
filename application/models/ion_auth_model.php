@@ -930,6 +930,48 @@ class Ion_auth_model extends CI_Model
 	}
 
 	/**
+	 * fb_login
+	 *
+	 * @return bool
+	 * @author Mathew
+	 **/
+	public function fb_login($identity, $remember=FALSE)
+	{
+		if (empty($identity))
+		{
+			$this->set_error('login_unsuccessful');
+			return FALSE;
+		}
+
+		$this->trigger_events('extra_where');
+		$query = $this->db->select($this->identity_column . ', username, email, id, password, active, last_login')
+		                  ->where($this->identity_column, $this->db->escape_str($identity))
+		                  ->limit(1)
+		                  ->get($this->tables['users']);
+
+		if ($query->num_rows() === 1)
+		{
+			$user = $query->row();
+			$session_data = array(
+			    'identity'             => $user->{$this->identity_column},
+			    'username'             => $user->username,
+			    'email'                => $user->email,
+			    'user_id'              => $user->id, //everyone likes to overwrite id so we'll use user_id
+			    'old_last_login'       => $user->last_login
+			);
+
+			$this->update_last_login($user->id);
+			$this->session->set_userdata($session_data);
+			if ($remember && $this->config->item('remember_users', 'ion_auth'))
+			{
+				$this->remember_user($user->id);
+			}
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	/**
 	 * is_max_login_attempts_exceeded
 	 * Based on code from Tank Auth, by Ilya Konyukhov (https://github.com/ilkon/Tank-Auth)
 	 *

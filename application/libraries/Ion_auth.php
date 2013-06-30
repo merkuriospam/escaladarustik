@@ -61,6 +61,7 @@ class Ion_auth
 		$this->load->library('email');
 		$this->lang->load('ion_auth');
 		$this->load->helper('cookie');
+		$this->load->config('smtp');
 
 		//Load the session, CI2 as a library, CI3 uses it as a driver
 		if (substr(CI_VERSION, 0, 1) == '2') 
@@ -157,7 +158,8 @@ class Ion_auth
 				else
 				{
 					$message = $this->load->view($this->config->item('email_templates', 'ion_auth').$this->config->item('email_forgot_password', 'ion_auth'), $data, true);
-					$this->email->clear();
+
+					$this->email->clear();$this->email->initialize($this->config->item('smtp_config_array'));					
 					$this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
 					$this->email->to($user->email);
 					$this->email->subject($this->config->item('site_title', 'ion_auth') . ' - ' . $this->lang->line('email_forgotten_password_subject'));
@@ -165,6 +167,7 @@ class Ion_auth
 
 					if ($this->email->send())
 					{
+						//var_dump($this->email);die();
 						$this->set_message('forgot_password_successful');
 						return TRUE;
 					}
@@ -226,7 +229,7 @@ class Ion_auth
 			{
 				$message = $this->load->view($this->config->item('email_templates', 'ion_auth').$this->config->item('email_forgot_password_complete', 'ion_auth'), $data, true);
 
-				$this->email->clear();
+				$this->email->clear();$this->email->initialize($this->config->item('smtp_config_array'));	
 				$this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
 				$this->email->to($profile->email);
 				$this->email->subject($this->config->item('site_title', 'ion_auth') . ' - ' . $this->lang->line('email_new_password_subject'));
@@ -350,7 +353,7 @@ class Ion_auth
 			{
 				$message = $this->load->view($this->config->item('email_templates', 'ion_auth').$this->config->item('email_activate', 'ion_auth'), $data, true);
 
-				$this->email->clear();
+				$this->email->clear();$this->email->initialize($this->config->item('smtp_config_array'));	
 				$this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
 				$this->email->to($email);
 				$this->email->subject($this->config->item('site_title', 'ion_auth') . ' - ' . $this->lang->line('email_activation_subject'));

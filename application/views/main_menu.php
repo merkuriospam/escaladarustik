@@ -15,9 +15,7 @@
 			</div>
 		</div> 
 	</div>
-	
-	
-	
+
 	<div class="clear solomobile"></div>
 	<div class="grid_12 solomobile">
 		<a href="https://maps.google.com.ar/maps?q=Pasaje+Rufino+3086&hl=es-419&sll=-38.452918,-63.598921&sspn=37.248188,86.572266&hnear=Rufino+3086,+Villa+Urquiza,+Buenos+Aires&t=m&z=16">
@@ -37,4 +35,4 @@
 			<img alt="" src="<?php echo img_url('articulos/logo_header.png'); ?>" />
 			<?php }?>
 		</a> 
-	</div>		
+	</div>	

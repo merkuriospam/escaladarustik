@@ -14,12 +14,12 @@
             Last Name: <br />
             <?php echo form_input($last_name);?>
       </p>
-
+<?php /*
       <p>
             Company Name: <br />
             <?php echo form_input($company);?>
       </p>
-<?php /*
+
       <p>
             Phone: <br />
             <?php echo form_input($phone1);?>-<?php echo form_input($phone2);?>-<?php echo form_input($phone3);?>

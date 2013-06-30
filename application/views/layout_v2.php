@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>:: RUSTIK ::</title>
+	<title><?php echo (isset($site_title))?'RSTK: '.$site_title:':: EscaladaRUSTIK ::';?></title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 
@@ -32,6 +32,15 @@
 <?php
 	echo add_jscript('996/modernizr-2.6.2.min');	
 ?>
+
+<!-- social meta start -->
+<meta property="og:site_name" content=":: EscaladaRUSTIK ::" />
+<meta itemprop="name" content="<?php echo (isset($oEntrada->titulo))?'RSTK: '.$oEntrada->titulo:'';?>">
+<meta itemprop="description" content="<?php echo (isset($oEntrada->copete))?$oEntrada->copete:'';?>">
+<meta property="og:image" content="<?php echo (isset($oEntrada->img_portada_tn))?usrf_url('portadas/'.$oEntrada->img_portada_tn):'';?>" />
+<!-- social meta end -->
+
+
 </head>
 <body>
 <div id="main-container" class="container clearfix">

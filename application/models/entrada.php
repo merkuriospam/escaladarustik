@@ -2,10 +2,11 @@
 
 class Entrada extends MY_Model 
 {
-	const CONTENIDO_GENERAL 	= 1;
-	const CONTENIDO_DESTACADO 	= 2;
-	const CONTENIDO_SLIDESHOW 	= 3;
-	const CONTENIDO_MENU	 	= 4;
+	const CONTENIDO_GENERAL 		= 1;
+	const CONTENIDO_DESTACADO 		= 2;
+	const CONTENIDO_SLIDESHOW 		= 3;
+	const CONTENIDO_MENU	 		= 4;
+	const CONTENIDO_COMUNICACION	= 5;
 		
 	public function __construct() {
 		parent::__construct();
@@ -20,7 +21,8 @@ class Entrada extends MY_Model
 			Entrada::CONTENIDO_GENERAL 		=> "General",
 			Entrada::CONTENIDO_DESTACADO 	=> "Destacado",
 			Entrada::CONTENIDO_SLIDESHOW 	=> "Slideshow",
-			Entrada::CONTENIDO_MENU 		=> "Menu"
+			Entrada::CONTENIDO_MENU 		=> "Menu",
+			Entrada::CONTENIDO_COMUNICACION	=> "Comunicacion"
 		);
 		return $arrCat;
 	}	

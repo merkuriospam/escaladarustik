@@ -70,3 +70,9 @@ li {
 	-khtml-opacity: 0.5;
 	opacity: 0.5;	
 }
+.slct_segmento {
+	width: 90%;
+	height: 20em;
+	background-color: #FFFFCC;
+	border: 1px solid #FFDD00;
+}

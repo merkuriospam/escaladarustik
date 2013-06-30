@@ -79,7 +79,7 @@
 	<?php if ($oEntrada->comentar == '1') { ?>
 	<div class="clear"></div>
 	<div class="grid_12">
-		<!--<div class="fb-comments" data-href="<?php echo site_url('entradas/ver/').$oEntrada->id; ?>" data-width="470" data-num-posts="10"></div>-->
-		<div class="fb-comments" data-href="http://www.facebook.com/pages/Escalada-Rustik/279547605510546" data-width="740" data-num-posts="10"></div>
+		<div class="fb-comments" data-href="<?php echo site_url('entradas/ver/').'/'.$oEntrada->id; ?>" data-width="470" data-num-posts="10"></div>
+		<!--<div class="fb-comments" data-href="http://www.facebook.com/pages/Escalada-Rustik/279547605510546" data-width="740" data-num-posts="10"></div>-->
 	</div>
 	<?php } ?>
